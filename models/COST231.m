@@ -16,7 +16,7 @@ function [pathloss] = COST231(frequency, distance, height_ant, height_rec, terra
 
     frequency = frequency / (1e6);
 
-    if terrain == 0
+    if terrain == 1
         x = 3;
         ahm = 3.2 * pow2(log10(11.75 * height_rec)) - 4.97;
     else

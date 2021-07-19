@@ -1,15 +1,16 @@
 %% main func
 
-function [] = main(~)
+function [out] = main(~)
     %%  init
     clc;
     clear;
 
     addpath('./gfx');
     addpath('./models');
+    addpath('./util');
     % List of Functions implemented
     lof = {@ECC33 @COST231 @SUI @FSPL};
     %% gui
-    gfx = gui_plv(lof);
-
+    out = gui_plv(lof);
+    
 end

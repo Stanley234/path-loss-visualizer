@@ -15,6 +15,7 @@ classdef gui_plv < matlab.apps.AppBase
         HeightTransmittermEditFieldLabel matlab.ui.control.Label
         FrequencyHzEditField matlab.ui.control.NumericEditField
         FrequencyHzEditFieldLabel matlab.ui.control.Label
+        MultiplePlotsCheckBox matlab.ui.control.CheckBox
         TerrainEditField matlab.ui.control.NumericEditField
         TerrainEditFieldLabel matlab.ui.control.Label
         UIAxes matlab.ui.control.UIAxes
@@ -22,6 +23,7 @@ classdef gui_plv < matlab.apps.AppBase
 
     properties (Access = public)
         lof
+        legend_data
     end
 
     % Callbacks that handle component events
@@ -35,8 +37,12 @@ classdef gui_plv < matlab.apps.AppBase
             dt = app.HeightTransmittermEditField.Value;
             dr = app.HeightRecievermEditField.Value;
             t = app.TerrainEditField.Value;
-
+            keep = app.MultiplePlotsCheckBox.Value;
             plot(app.UIAxes, d, app.lof{model}(f, d, dt, dr, t));
+            
+            app.legend_data = util_legend(app.legend_data, model, f, t, keep );
+            
+            legend(app.UIAxes, app.legend_data);
 
         end
 
@@ -46,6 +52,17 @@ classdef gui_plv < matlab.apps.AppBase
 
             if ischar(filename)
                 exportgraphics(app.UIAxes, [filepath filename]);
+            end
+
+        end
+        
+        function MultiplePlotsCheckBoxValueChanged(app, ~)
+
+            switch app.MultiplePlotsCheckBox.Value
+                case 0
+                    hold(app.UIAxes, 'off')
+                case 1
+                    hold(app.UIAxes, 'on')
             end
 
         end
@@ -116,7 +133,7 @@ classdef gui_plv < matlab.apps.AppBase
             % Create MaxDistancemSlider
             app.MaxDistancemSlider = uislider(app.UIFigure);
             app.MaxDistancemSlider.Limits = [1000 10000];
-            app.MaxDistancemSlider.Position = [22 238 188 7];
+            app.MaxDistancemSlider.Position = [22 238 160 7];
             app.MaxDistancemSlider.Value = 1000;
 
             % Create ComputeButton
@@ -136,6 +153,12 @@ classdef gui_plv < matlab.apps.AppBase
             app.ModelLabel.HorizontalAlignment = 'right';
             app.ModelLabel.Position = [9 159 65 22];
             app.ModelLabel.Text = 'Model:';
+
+            % Create MultiplePlotsCheckBox
+            app.MultiplePlotsCheckBox = uicheckbox(app.UIFigure);
+            app.MultiplePlotsCheckBox.ValueChangedFcn = createCallbackFcn(app, @MultiplePlotsCheckBoxValueChanged, true);
+            app.MultiplePlotsCheckBox.Text = 'Multiple Plots';
+            app.MultiplePlotsCheckBox.Position = [9 10 100 22];
 
             % Create ModelDropDown
             app.ModelDropDown = uidropdown(app.UIFigure);

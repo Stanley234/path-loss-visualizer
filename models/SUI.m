@@ -18,7 +18,7 @@ function [pathloss] = SUI(frequency, distance, height_ant, height_rec, terrain, 
     lambda = frequency / c;
     frequency = frequency / (1e6);
 
-    if terrain == 1
+    if terrain == 0
         a = 4.6;
         b = 0.0075;
         c = 12.6;
